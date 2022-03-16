@@ -1,0 +1,15 @@
+.popup__content_login-link{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    color: #FFFFFF;
+    align-self: center;
+    padding-left: 5px;    
+    text-decoration: none;
+}
+
+
+.popup__content_login-link:hover {
+    opacity: 0.6;
+}
