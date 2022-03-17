@@ -103,11 +103,7 @@ _removeLike(id) {
 }
 
 export  const api = new Api({
-  url: "https://mesto.nomoreparties.co/v1/cohort-30",
-  headers: {
-    authorization: "ef54a2bc-9421-42c0-a501-09b713e96a02",
-    "Content-Type": "application/json",
-  },
+  url: "api.praime.nomoredomains.work",
 });
 
 // export default api;

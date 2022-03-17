@@ -1,4 +1,3 @@
-# express-mesto
-Проект "Mesto" бэк
-14 работа
-1 правки
+# 15 работа
+
+# Публичный IP-адрес 178.154.247.52 сервера. Домен https://praime.nomoredomains.work/ 
