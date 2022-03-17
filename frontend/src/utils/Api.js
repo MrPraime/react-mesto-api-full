@@ -104,6 +104,10 @@ _removeLike(id) {
 
 export  const api = new Api({
   url: "https://api.praime.nomoredomains.work",
+  headers: {
+    authorization: "ef54a2bc-9421-42c0-a501-09b713e96a02",
+    "Content-Type": "application/json",
+  },
 });
 
 // export default api;
