@@ -59,7 +59,7 @@
 
 
 const authConfigg = {
-  baseUrl: 'api.praime.nomoredomains.work',
+  baseUrl: 'https://api.praime.nomoredomains.work',
 }
 
 const auth = new Auth(authConfigg);

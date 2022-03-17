@@ -103,7 +103,7 @@ _removeLike(id) {
 }
 
 export  const api = new Api({
-  url: "api.praime.nomoredomains.work",
+  url: "https://api.praime.nomoredomains.work",
 });
 
 // export default api;
