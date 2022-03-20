@@ -3,7 +3,6 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import Footer from "./Footer.js";
 import Main from "./Main.js";
 import Header from "./Header.js";
-// import PopupWithForm from "./PopupWithForm.js";
 import ImagePopup from "./ImagePopup.js";
 import { api } from "../utils/Api.js";
 import EditProfilePopup from "./EditProfilePopup.js";
@@ -148,8 +147,8 @@ function App() {
 
   /** Проверяет наличие токена */
   function checkToken() {
- const jwt = localStorage.getItem("jwt");
-    if (jwt) {
+    if (localStorage.getItem("jwt")) {
+      const jwt = localStorage.getItem("jwt");
       auth
         .checkToken(jwt)
         .then((data) => {
@@ -214,7 +213,7 @@ if(loggedIn) {
    api
      .getInitialCards(jwt)
      .then((cardsList) => {
-       setCards(cardsList);
+       setCards(cardsList.data.reverse());
      })
      .catch((err) => {
        console.error(err);
