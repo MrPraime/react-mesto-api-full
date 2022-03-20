@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Footer from "./Footer.js";
 import Main from "./Main.js";
@@ -32,7 +32,7 @@ function App() {
   const [isRegistationResultPopupOpen, setIsRegistationResultPopupOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  
+  const jwt = localStorage.getItem('jwt'); 
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -65,7 +65,7 @@ function App() {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     api
-      .changeLikeCardStatus(card._id, !isLiked)
+      .changeLikeCardStatus(card._id, !isLiked, jwt)
       .then((newCard) => {
         setCards((state) =>
           state.map((c) => (c._id === card._id ? newCard : c))
@@ -78,7 +78,7 @@ function App() {
 
   function handleDeleteClick(card) {
     api
-      .deleteCard(card._id)
+      .deleteCard(card._id, jwt)
       .then(() => {
         setCards(cards.filter((i) => i._id !== card._id));
       })
@@ -90,7 +90,7 @@ function App() {
   const handleUpdateUser = ({ name, about }) => {
     setIsLoading(true);
     api
-      .patchUserInfo(name, about)
+      .patchUserInfo(name, about, jwt)
       .then((newUser) => {
         setCurrentUser(newUser);
         closeAllPopups();
@@ -106,7 +106,7 @@ function App() {
   const handleUpdateAvatar = (data) => {
     setIsLoading(true);
     api
-      .patchNewAvatar(data)
+      .patchNewAvatar(data, jwt)
       .then((newUser) => {
         setCurrentUser(newUser);
         closeAllPopups();
@@ -122,7 +122,7 @@ function App() {
 
   const handleAddPlaceSubmit = ({ name, link }) => {
     setIsLoading(true);
-    api.postNewCard(name, link)
+    api.postNewCard(name, link, jwt)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
@@ -148,8 +148,8 @@ function App() {
 
   /** Проверяет наличие токена */
   function checkToken() {
-    if (localStorage.getItem("jwt")) {
-      const jwt = localStorage.getItem("jwt");
+ const jwt = localStorage.getItem("jwt");
+    if (jwt) {
       auth
         .checkToken(jwt)
         .then((data) => {
@@ -197,37 +197,44 @@ function App() {
     auth
       .authorization(password, email)
       .then((data) => {
+        localStorage.setItem("jwt", data.token);
         setLoggedIn(true);
         setUserEmail(email);
         navigate("/");
-        localStorage.setItem("jwt", data.token);
+        return data.token
       })
       .catch((err) => {
         console.error(err);
       });
   }
 
-  React.useEffect(() => {
-    api
-      .getInitialCards()
-      .then((cardsList) => {
-        setCards(cardsList);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
 
-  React.useEffect(() => {
-    api
-      .getUserInfo()
-      .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
+React.useEffect(() => { 
+if(loggedIn) {
+   api
+     .getInitialCards(jwt)
+     .then((cardsList) => {
+       setCards(cardsList);
+     })
+     .catch((err) => {
+       console.error(err);
+     });
+   }
+ }, [loggedIn, jwt]);
+
+React.useEffect(() => {
+    if(loggedIn) {
+   api
+     .getUserInfo(jwt)
+     .then((data) => {
+       setCurrentUser(data);
+     })
+     .catch((err) => {
+       console.error(err);
+     });
+  }
+ }, [loggedIn, jwt]);
+
 
   return (
     <div className="page">

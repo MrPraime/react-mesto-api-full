@@ -1,113 +1,108 @@
 export class Api {
-  constructor({ url, headers }) {
+  constructor({ url }) {
     this._url = url;
-    this._headers = headers;
   }
 
   _checkResponse(res) {
     if (res.ok) {
       return res.json();
+    }
+    return Promise.reject(`Ошибка ${res.status}`);
   }
-  return Promise.reject(`Ошибка ${res.status}`);
-} 
 
-  getUserInfo() {
+  getUserInfo(jwt) {
     return fetch(`${this._url}/users/me`, {
-      headers: this._headers,
-    })
-    .then(this._checkResponse)
-     
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+      },
+    }).then(this._checkResponse);
   }
 
-  patchUserInfo(name, about) {
-    // loading(true); 
+  patchUserInfo(name, about, jwt) {
     return fetch(`${this._url}/users/me`, {
       method: "PATCH",
-      headers: this._headers,
-      "Content-Type": "application/json",
-
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         name: name,
         about: about,
       }),
-    })
-    .then(this._checkResponse)  
+    }).then(this._checkResponse);
   }
 
-  
-
-  getInitialCards() {
+  getInitialCards(jwt) {
     return fetch(`${this._url}/cards `, {
-      headers: this._headers,
-    })
-    .then(this._checkResponse)
-
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+      },
+    }).then(this._checkResponse);
   }
 
-  postNewCard(name, link) {
-    return fetch(`${this._url}/cards `, {
+  postNewCard(name, link, jwt) {
+    return fetch(`${this._url}/cards`, {
       method: "POST",
-      headers: this._headers,
-
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         name: name,
         link: link,
       }),
-    })
-    .then(this._checkResponse)
-
+    }).then(this._checkResponse);
   }
 
-  deleteCard(id) {
+  deleteCard(id, jwt) {
     return fetch(`${this._url}/cards/${id}`, {
       method: "DELETE",
-      headers: this._headers,
-    })
-    .then(this._checkResponse)
-     
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    }).then(this._checkResponse);
   }
 
-  patchNewAvatar(avatarUrl) {
+  patchNewAvatar(avatarUrl, jwt) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: "PATCH",
-      headers: this._headers,
-
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         avatar: avatarUrl,
       }),
-    })
-    .then(this._checkResponse)     
+    }).then(this._checkResponse);
   }
 
+  changeLikeCardStatus(cardId, status, jwt) {
+    return status ? this._setLike(cardId, jwt) : this._removeLike(cardId, jwt);
+  }
 
-  changeLikeCardStatus(cardId, status) {
-    return status ? this._setLike(cardId) : this._removeLike(cardId);
-}
-
-_setLike(id) {
-  return fetch(`${this._url}/cards/likes/${id}`, {
+  _setLike(id, jwt) {
+    return fetch(`${this._url}/cards/likes/${id}`, {
       method: "PUT",
-      headers: this._headers})
-  .then(this._checkResponse);
-}
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    }).then(this._checkResponse);
+  }
 
-_removeLike(id) {
-  return fetch(`${this._url}/cards/likes/${id}`, {
+  _removeLike(id, jwt) {
+    return fetch(`${this._url}/cards/likes/${id}`, {
       method: "DELETE",
-      headers: this._headers,
-  })
-  .then(this._checkResponse);
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    }).then(this._checkResponse);
+  }
 }
 
-
-}
-
-export  const api = new Api({
+export const api = new Api({
   url: "https://api.praime.nomoredomains.work",
-  headers: {
-    authorization: "ef54a2bc-9421-42c0-a501-09b713e96a02",
-    "Content-Type": "application/json",
-  },
 });
-
-// export default api;
