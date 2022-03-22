@@ -145,7 +145,8 @@ function App() {
     setUserEmail(email);
   }
 
- function checkToken() {
+  /** Проверяет наличие токена */
+  function checkToken() {
     if (localStorage.getItem("jwt")) {
       const jwt = localStorage.getItem("jwt");
       auth
@@ -160,7 +161,6 @@ function App() {
         });
     }
   }
-
 
   React.useEffect(() => {
     checkToken();
@@ -200,6 +200,7 @@ function App() {
         setLoggedIn(true);
         setUserEmail(email);
         navigate("/");
+        return data.token
       })
       .catch((err) => {
         console.error(err);

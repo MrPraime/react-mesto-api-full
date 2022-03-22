@@ -80,12 +80,12 @@ export class Api {
     }).then(this._checkResponse);
   }
 
-  changeLikeCardStatus(cardId, status, jwt) {
-    return status ? this._setLike(cardId, jwt) : this._removeLike(cardId, jwt);
+  changeLikeCardStatus(id, status, jwt) {
+    return status ? this._setLike(id, jwt) : this._removeLike(id, jwt);
   }
 
   _setLike(id, jwt) {
-    return fetch(`${this._url}/cards/likes/${id}`, {
+    return fetch(`${this._url}/cards//${id}/likes`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -94,7 +94,7 @@ export class Api {
   }
 
   _removeLike(id, jwt) {
-    return fetch(`${this._url}/cards/likes/${id}`, {
+    return fetch(`${this._url}/cards/${id}/likes`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${jwt}`,

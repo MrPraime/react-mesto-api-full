@@ -14,21 +14,21 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
-const getUser = (req, res, next) => {
-  User.findById(req.user._id)
-    .orFail(() => {
-      throw new NotFoundError('Нет пользователя с таким id');
-    })
-    .then((user) => res.status(200).send(user))
-    .catch(next);
-};
-
-const getCurrentUser = (req, res, next) => User.findById(req.user._id)
-  .orFail(() => {
-    throw new NotFoundError('пользователь не найден');
-  })
-  .then((user) => res.status(200).send(user))
-  .catch(next);
+const getUser = (req, res, next) => { 
+  User.findById(req.user._id) 
+    .orFail(() => { 
+      throw new NotFoundError('Нет пользователя с таким id'); 
+    }) 
+    .then((user) => res.status(200).send(user)) 
+    .catch(next); 
+}; 
+ 
+const getCurrentUser = (req, res, next) => User.findById(req.user._id) 
+  .orFail(() => { 
+    throw new NotFoundError('пользователь не найден'); 
+  }) 
+  .then((user) => res.status(200).send(user)) 
+  .catch(next); 
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
