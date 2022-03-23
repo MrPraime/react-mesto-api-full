@@ -61,7 +61,7 @@ function App() {
 
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
 
     api
       .changeLikeCardStatus(card._id, !isLiked, jwt)
@@ -78,7 +78,7 @@ function App() {
   function handleDeleteClick(card) {
     api
       .deleteCard(card._id, jwt)
-      .then(() => {
+            .then(() => {
         setCards(cards.filter((i) => i._id !== card._id));
       })
       .catch((err) => {
@@ -152,8 +152,8 @@ function App() {
         .checkToken(jwt)
         .then((data) => {
           setLoggedIn(true);
-          handleSetUserEmail(data.data.email);
           navigate("/");
+	  handleSetUserEmail(data.email);
         })
         .catch((err) => {
           console.error(err);
