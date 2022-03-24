@@ -22,20 +22,22 @@ const createCard = (req, res, next) => {
 };
 
 const delCard = (req, res, next) => {
-  Cards.findByIdAndRemove(req.params.id)
+  Cards.findById(req.params.id)
     .orFail(() => {
-      throw new NotFoundError('Карточка не найдена');
+      throw new NotFoundError("Карточка не найдена");
     })
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
-        next(new ForbiddenError('Попытка удалить чужую карточку'));
+        next(new ForbiddenError("Попытка удалить чужую карточку"));
       } else {
-        res.status(200).send(card);
+        return Cards.findByIdAndRemove(req.params.id).then(() => {
+          res.status(200).send(card);
+        });
       }
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные'));
+      if (err.name === "CastError") {
+        next(new BadRequestError("Переданы некорректные данные"));
       } else next(err);
     });
 };
